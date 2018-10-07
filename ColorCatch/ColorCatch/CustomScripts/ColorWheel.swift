@@ -9,15 +9,26 @@
 import Foundation
 import SpriteKit
 
+enum RotationDirection {
+    case left, right;
+}
+
 class ColorWheel: SKSpriteNode {
     
     var currentColor: Colors = .red;
     
-    func rotateWheel(angle: CGFloat) -> Void {
+    func rotateWheel(angle: CGFloat, direction: RotationDirection) -> Void {
         let rotateAction = SKAction.rotate(byAngle: angle, duration: 0.1);
         
         self.run(rotateAction);
         
-        currentColor.next();
+        switch (direction) {
+        case .left:
+            currentColor.next();
+            break;
+        case .right:
+            currentColor.back();
+            break;
+        }
     }
 }

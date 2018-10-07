@@ -65,21 +65,28 @@ class GameScene: SKScene {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        colorWheel?.rotateWheel(angle: CGFloat(Double.pi / 2));
+        let touch = touches.first! as UITouch;
+        let positionInScene = touch.location(in: self);
+        
+        if (positionInScene.x < 0) {
+            colorWheel?.rotateWheel(angle: CGFloat(Double.pi / 2), direction: .left);
+        } else {
+            colorWheel?.rotateWheel(angle: -CGFloat(Double.pi / 2), direction: .right);
+        }
     }
     
     private func spawnBall(ball: Ball) -> Void {
         let oldSpeed = currentSpeed;
         let fadeOut = SKAction.fadeOut(withDuration: 0.1);
         let move = SKAction.move(to: ballStartPos, duration: 0.01);
-        let fadeIn = SKAction.fadeIn(withDuration: 0.1);
+        let fadeIn = SKAction.fadeIn(withDuration: 0.3);
         let sequence = SKAction.sequence([fadeOut, move, fadeIn]);
         
         changeSpeed(to: 0);
         ball.run(sequence);
         changeSpeed(to: oldSpeed);
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(120)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(140)) {
             self.allowedToScore = true;
             ball.changeColor();
         }

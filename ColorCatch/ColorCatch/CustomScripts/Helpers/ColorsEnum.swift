@@ -6,6 +6,8 @@
 //  Copyright © 2018 Mario Adisurya. All rights reserved.
 //
 
+import GameplayKit;
+
 public enum Colors: Int {
     case red, yellow, green, blue;
     
@@ -13,13 +15,17 @@ public enum Colors: Int {
         self = Colors(rawValue: rawValue + 1) ?? .red;
     }
     
+    mutating func back() {
+        self = Colors(rawValue: rawValue - 1) ?? .blue;
+    }
+    
     mutating func random() {
-        var randomInt = Int.random(in: 0..<4);
+        var randomInt = arc4random_uniform(4);
         
         if (randomInt == rawValue) {
             randomInt = (randomInt < 3) ? randomInt + 1 : randomInt - 1;
         }
         
-        self = Colors(rawValue: randomInt) ?? .red;
+        self = Colors(rawValue: Int(randomInt)) ?? .red;
     }
 }
