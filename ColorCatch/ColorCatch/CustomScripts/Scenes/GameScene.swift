@@ -21,6 +21,8 @@ class GameScene: SKScene {
     private var currentSpeed: CGFloat = 4;
     private let ballStartPos: CGPoint = CGPoint(x: 0, y: 400);
     
+    private var allowedToScore: Bool = true;
+    
     override func didMove(to view: SKView) {
         self.scoreLabel = self.childNode(withName: "//score-label") as? SKLabelNode;
         self.ball = self.childNode(withName: "//ball") as? Ball;
@@ -52,8 +54,11 @@ class GameScene: SKScene {
             
             if let colorWheelPos = colorWheel?.position {
                 if (ballPos.y <= colorWheelPos.y) {
-                    incrementScore();
-                    spawnBall(ball: self.ball!);
+                    if (allowedToScore) {
+                        allowedToScore = false;
+                        incrementScore();
+                        spawnBall(ball: self.ball!);
+                    }
                 }
             }
         }
@@ -64,8 +69,20 @@ class GameScene: SKScene {
     }
     
     private func spawnBall(ball: Ball) -> Void {
-        ball.position = ballStartPos;
-        ball.changeColor();
+        let oldSpeed = currentSpeed;
+        let fadeOut = SKAction.fadeOut(withDuration: 0.1);
+        let move = SKAction.move(to: ballStartPos, duration: 0.1);
+        let fadeIn = SKAction.fadeIn(withDuration: 0.1);
+        let sequence = SKAction.sequence([fadeOut, move, fadeIn]);
+        
+        changeSpeed(to: 0);
+        ball.run(sequence);
+        changeSpeed(to: oldSpeed);
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
+            self.allowedToScore = true;
+            ball.changeColor();
+        }
     }
     
     private func incrementScore() -> Void {
