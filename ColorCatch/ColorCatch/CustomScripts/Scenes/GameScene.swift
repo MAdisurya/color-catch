@@ -71,7 +71,7 @@ class GameScene: SKScene {
     private func spawnBall(ball: Ball) -> Void {
         let oldSpeed = currentSpeed;
         let fadeOut = SKAction.fadeOut(withDuration: 0.1);
-        let move = SKAction.move(to: ballStartPos, duration: 0.1);
+        let move = SKAction.move(to: ballStartPos, duration: 0.01);
         let fadeIn = SKAction.fadeIn(withDuration: 0.1);
         let sequence = SKAction.sequence([fadeOut, move, fadeIn]);
         
@@ -79,7 +79,7 @@ class GameScene: SKScene {
         ball.run(sequence);
         changeSpeed(to: oldSpeed);
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(120)) {
             self.allowedToScore = true;
             ball.changeColor();
         }
