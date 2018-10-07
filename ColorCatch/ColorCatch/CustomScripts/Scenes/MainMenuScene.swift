@@ -41,6 +41,10 @@ class MainMenuScene: SKScene {
                 
                 self.rootViewController?.goToScene(sceneName: "GameScene", transition: transition);
             }
+            
+            if (name == "quit-label") {
+                exit(0);
+            }
         }
     }
     
