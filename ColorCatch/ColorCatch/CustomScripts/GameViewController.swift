@@ -12,8 +12,16 @@ import GameplayKit
 
 class GameViewController: UIViewController {
     
+    public var score: Int = 0;
+    public var highScore: Int = 0;
+    
+    private let userDefaults = UserDefaults.standard;
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        highScore = userDefaults.integer(forKey: "highScore");
+        score = 0;
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -33,7 +41,7 @@ class GameViewController: UIViewController {
     }
 
     override var shouldAutorotate: Bool {
-        return true
+        return false;
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -56,8 +64,26 @@ class GameViewController: UIViewController {
     public func goToScene(sceneName: String, transition: SKTransition) {
         if let view = self.view as! SKView? {
             if let newScene = SKScene(fileNamed: sceneName) {
+                newScene.scaleMode = .aspectFill;
                 view.presentScene(newScene, transition: transition);
             }
         }
+    }
+    
+    public func updateScore(to score: Int) {
+        self.score = score;
+        
+        if (score > highScore) {
+            highScore = score;
+            userDefaults.set(score, forKey: "highScore");
+        }
+    }
+    
+    public func getHighScore() -> Int {
+        return highScore;
+    }
+    
+    public func getCurrentScore() -> Int {
+        return score;
     }
 }
